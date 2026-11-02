@@ -1,0 +1,120 @@
+# Linux Çekirdeği ve Önyükleme — Gömülü Linux Kitaplığı
+site_name: Linux Çekirdeği ve Önyükleme
+site_description: >-
+  Gömülü Linux sistemlerinde önyükleme zincirini, U-Boot'u, çekirdeği, aygıt ağacını, systemd'yi ve sistem yönetimini anlatan açık kaynak Türkçe kitap.
+site_author: Gömülü Linux Kitaplığı katkıcıları
+site_url: https://mfguney.github.io/cekirdek-onyukleme/
+# Çevrimiçi ve çevrimdışı kullanımda bağlantıların aynı kalması için .html uzantılı adresler kullanılır
+use_directory_urls: false
+repo_url: https://github.com/mfguney/cekirdek-onyukleme
+repo_name: cekirdek-onyukleme
+edit_uri: edit/main/docs/
+copyright: >-
+  Metin <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.tr">CC BY-SA 4.0</a>,
+  örnek kodlar MIT lisanslıdır. Gömülü Linux Kitaplığı'nın bir parçasıdır.
+
+theme:
+  name: material
+  language: tr
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Karanlık temaya geç
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Aydınlık temaya geç
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.action.edit
+    - content.tooltips
+    - toc.follow
+
+extra_css:
+  - stylesheets/kitap.css
+
+extra_javascript:
+  - javascripts/senaryolar.js
+  - javascripts/quiz.js
+  - javascripts/akis-motor.js
+  - javascripts/terminal.js
+
+plugins:
+  - search:
+      lang: tr
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      permalink_title: Bu başlığa bağlantı
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.snippets:
+      auto_append:
+        - includes/kisaltmalar.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Başlangıç:
+      - index.md
+      - Kitabın kullanımı: nasil-okunur.md
+  - Bölümler:
+      - "1 · Önyükleme zinciri: ROM'dan init'e": bolumler/01-onyukleme-zinciri.md
+      - "2 · U-Boot: ortam, komutlar ve önyükleme betikleri": bolumler/02-u-boot.md
+      - "3 · Çekirdek kaynak ağacı, Kconfig ve Kbuild": bolumler/03-cekirdek-derleme.md
+      - "4 · Aygıt ağacı: yapı, bağlamalar ve overlay'ler": bolumler/04-aygit-agaci.md
+      - "5 · Çekirdek ile kullanıcı alanı arayüzleri: /proc, /sys, udev": bolumler/05-kullanici-alani-arayuzleri.md
+      - "6 · init sistemleri ve systemd": bolumler/06-init-systemd.md
+      - "7 · Seri konsol, ağ ve uzaktan erişim": bolumler/07-sistem-yonetimi.md
+      - "8 · Çekirdek hata ayıklama: printk, dynamic debug, ftrace, kgdb": bolumler/08-cekirdek-hata-ayiklama.md
+  - Etkileşimli araçlar:
+      - Animasyonlu şemalar: araclar/animasyonlar.md
+  - Ekler:
+      - Terimler sözlüğü: ekler/sozluk.md
+      - Komut özeti: ekler/komut-ozeti.md
+      - Kaynakça ve ileri okuma: ekler/kaynakca.md

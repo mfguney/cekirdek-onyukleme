@@ -1,0 +1,4 @@
+# Kitabı yerelde önizlemek için:  pip install -r requirements.txt && mkdocs serve
+# MkDocs 2.0 geriye uyumsuz; Material for MkDocs ile 1.x'te kalıyoruz (bkz. ONERILER.md).
+mkdocs>=1.6,<2
+mkdocs-material>=9.6,<10

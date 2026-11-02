@@ -1,0 +1,57 @@
+// SPDX-License-Identifier: MIT
+/*
+ * agecidi.dts: Örnek SoC 1 üzerine kurulu endüstriyel sensör ağ geçidi kartı (Bölüm 4).
+ * Derleme: ../dts/derle-dtb.sh (cpp ön işlemesi + dtc)
+ */
+/dts-v1/;
+
+#include "ornek-soc.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	model = "Ornek Endustriyel Sensor Agecidi";
+	compatible = "ornek,agecidi", "ornek,soc1";
+
+	aliases {
+		serial0 = &uart0;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x0 0x40000000 0x0 0x20000000>;	/* 512 MiB */
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led-durum {
+			label = "agecidi:green:durum";
+			gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+			linux,default-trigger = "heartbeat";
+		};
+	};
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&i2c0 {
+	status = "okay";
+	clock-frequency = <100000>;
+
+	sicaklik: sensor@48 {
+		compatible = "ti,tmp102";
+		reg = <0x48>;
+		label = "ortam";
+		#thermal-sensor-cells = <1>;
+	};
+};

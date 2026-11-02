@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: MIT
+# /etc/profile: oturum açıldığında okunur
+export PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PS1='\u@\h:\w\$ '
+cd ~

@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MIT
+# sensor-oku.timer: sensor-oku.service birimini her 15 dakikada bir çalıştırır. Bölüm 6.
+[Unit]
+Description=Sensör okumasını düzenli aralıklarla başlat
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=15min
+AccuracySec=1s
+
+[Install]
+WantedBy=timers.target

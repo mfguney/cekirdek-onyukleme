@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: MIT
+/*
+ * ornek-soc.dtsi: kitaptaki hayalî "Örnek SoC 1" yongası (Bölüm 4).
+ * Yonga düzeyindeki donanım burada tanımlanır; kart dosyaları bu dosyayı içerir.
+ * Çevre birimleri gerçek IP bloklarının (ARM PL011, PL061, Synopsys DesignWare I2C)
+ * bağlamalarını (binding) kullanır.
+ */
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+/ {
+	#address-cells = <2>;
+	#size-cells = <2>;
+	interrupt-parent = <&gic>;
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu0: cpu@0 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a53";
+			reg = <0>;
+			enable-method = "psci";
+		};
+	};
+
+	psci {
+		compatible = "arm,psci-1.0";
+		method = "smc";
+	};
+
+	timer {
+		compatible = "arm,armv8-timer";
+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+	};
+
+	apb_clk: clock-24000000 {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+	};
+
+	soc: soc@0 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0x0 0x0 0x0 0x40000000>;	/* çocuk adres → üst adres, 1 GiB */
+
+		gic: interrupt-controller@8000000 {
+			compatible = "arm,cortex-a15-gic";
+			reg = <0x08000000 0x10000>, <0x08010000 0x10000>;
+			interrupt-controller;
+			#interrupt-cells = <3>;
+		};
+
+		uart0: serial@9000000 {
+			compatible = "arm,pl011", "arm,primecell";
+			reg = <0x09000000 0x1000>;
+			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&apb_clk>, <&apb_clk>;
+			clock-names = "uartclk", "apb_pclk";
+			status = "disabled";
+		};
+
+		gpio0: gpio@9030000 {
+			compatible = "arm,pl061", "arm,primecell";
+			reg = <0x09030000 0x1000>;
+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&apb_clk>;
+			clock-names = "apb_pclk";
+			gpio-controller;
+			#gpio-cells = <2>;
+			status = "disabled";
+		};
+
+		i2c0: i2c@9040000 {
+			compatible = "snps,designware-i2c";
+			reg = <0x09040000 0x1000>;
+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&apb_clk>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+	};
+};

@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+# sensor-oku.service: zamanlayıcıyla tetiklenen tek seferlik okuma. Bölüm 6.
+[Unit]
+Description=Örnek ağ geçidi tek seferlik sensör okuması
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sensor-oku 3

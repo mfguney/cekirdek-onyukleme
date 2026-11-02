@@ -1,0 +1,27 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# /etc/init.d/rcS: BusyBox init'in sysinit adımında çalışan açılış betiği. Bölüm 6.
+# bagli <dizin>: dizin bir bağlama noktası mı? (initramfs'ten taşınmış olabilir)
+bagli() { grep -q " $1 " /proc/mounts 2>/dev/null; }
+
+bagli /proc || mount -t proc proc /proc
+bagli /sys  || mount -t sysfs sysfs /sys
+bagli /dev  || mount -t devtmpfs devtmpfs /dev
+mount -o remount,rw /
+mount -t tmpfs tmpfs /tmp
+mount -t tmpfs tmpfs /run
+bagli /sys/kernel/debug   || mount -t debugfs debugfs /sys/kernel/debug
+bagli /sys/kernel/tracing || mount -t tracefs tracefs /sys/kernel/tracing
+
+# Sıcak takma olayları için mdev (Bölüm 5)
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+# Soğuk tarama: açılışta mdev'den önce oluşan olaylar yeniden işlenir
+mdev -s                                    # /sys/class, /sys/block: aygıt düğümleri
+for u in /sys/bus/*/devices/*/uevent; do   # MODALIAS taşıyan olaylar: modül yükleme
+    echo add > "$u"
+done
+
+hostname -F /etc/hostname
+ip link set lo up
+ip link set eth0 up 2>/dev/null && udhcpc -q -n -s /etc/udhcpc.script -i eth0 >/dev/null 2>&1
+echo "rcS: açılış betiği tamamlandı"

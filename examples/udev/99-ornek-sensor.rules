@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: MIT
+# /etc/udev/rules.d/99-ornek-sensor.rules: sensör aygıtları için udev kuralları. Bölüm 5.
+
+# USB-seri dönüştürücüye bağlı sensör: kalıcı ad, izin ve grup; takıldığında
+# systemd toplayıcı servisini başlatır (TAG+="systemd" aygıtı systemd'ye birim olarak tanıtır)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", \
+    SYMLINK+="sensor-uart", MODE="0660", GROUP="dialout", \
+    TAG+="systemd", ENV{SYSTEMD_WANTS}+="sensor-toplayici.service"
+
+# Ağ arayüzüne MAC adresine göre kalıcı ad
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="52:54:00:12:34:56", NAME="eth0"

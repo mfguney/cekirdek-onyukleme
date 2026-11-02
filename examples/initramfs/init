@@ -1,0 +1,40 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# /init: initramfs içindeki ilk kullanıcı alanı programı (PID 1). Bölüm 1.
+# Görevi: sanal dosya sistemlerini bağlamak, kök aygıtını bulmak ve
+# switch_root ile kalıcı kök dosya sistemine geçmek.
+
+mount -t proc     proc     /proc
+mount -t sysfs    sysfs    /sys
+# CONFIG_DEVTMPFS_MOUNT initramfs ile açılışta uygulanmaz; /dev elle bağlanır
+mount -t devtmpfs devtmpfs /dev
+
+echo "initramfs: PID $$, çekirdek $(uname -r)"
+
+kok=""
+for p in $(cat /proc/cmdline); do
+    case "$p" in
+        root=*)        kok="${p#root=}" ;;
+        kurtarma)      echo "initramfs: kurtarma kabuğu açılıyor"; exec /bin/sh ;;
+    esac
+done
+
+if [ -z "$kok" ]; then
+    echo "initramfs: root= verilmedi, initramfs içindeki /sbin/init çalıştırılıyor"
+    exec /sbin/init
+fi
+
+# Kök aygıtının oluşmasını bekle (rootwait'in kullanıcı alanı karşılığı)
+i=0
+while [ ! -b "$kok" ] && [ $i -lt 50 ]; do sleep 0.1; i=$((i + 1)); done
+[ -b "$kok" ] || { echo "initramfs: $kok bulunamadı"; exec /bin/sh; }
+
+mkdir -p /yenikok
+mount -t ext4 -o ro "$kok" /yenikok || { echo "initramfs: bağlanamadı"; exec /bin/sh; }
+echo "initramfs: $kok /yenikok altına bağlandı, switch_root"
+
+# Sanal dosya sistemleri yeni köke taşınır; switch_root initramfs'i boşaltır
+mount --move /dev  /yenikok/dev
+mount --move /proc /yenikok/proc
+mount --move /sys  /yenikok/sys
+exec switch_root /yenikok /sbin/init

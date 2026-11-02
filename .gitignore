@@ -1,0 +1,9 @@
+site/
+.cache/
+__pycache__/
+.venv/
+# Yocto derleme çıktıları kitabın deposuna girmesin
+build/
+bitbake-builds/
+downloads/
+sstate-cache/

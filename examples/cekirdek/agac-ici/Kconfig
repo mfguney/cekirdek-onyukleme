@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# drivers/misc/ornek/Kconfig: ornek_bilgi sürücüsünün çekirdek ağacına eklenmesi (Bölüm 3)
+
+config ORNEK_BILGI
+	tristate "Örnek ağ geçidi bilgi sürücüsü"
+	depends on SYSFS
+	select FW_LOADER
+	help
+	  Kitabın örnek sürücüsü. Bir platform aygıtı oluşturur, ürün
+	  yazılımı ister ve /sys/module/ornek_bilgi/parameters/ altında
+	  parametreler sunar.
+
+	  Modül olarak derlenirse adı ornek_bilgi olur.
+
+config ORNEK_BILGI_AYRINTI
+	bool "Ayrıntılı hata ayıklama iletileri (DEBUG)"
+	depends on ORNEK_BILGI
+	help
+	  pr_debug() iletilerini derleme sırasında etkinleştirir. Dynamic
+	  debug kullanılıyorsa bu seçeneğe gerek yoktur (Bölüm 8).

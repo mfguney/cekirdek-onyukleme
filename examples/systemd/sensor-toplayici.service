@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: MIT
+# /usr/lib/systemd/system/sensor-toplayici.service: sürekli çalışan sensör toplama servisi. Bölüm 6.
+[Unit]
+Description=Örnek ağ geçidi sensör toplayıcı
+Documentation=https://mfguney.github.io/cekirdek-onyukleme/
+# Ağ yapılandırılmadan başlatılmamalı: önce sıralama (After), sonra istek (Wants)
+Wants=network-online.target
+After=network-online.target
+# Sensör aygıtı yoksa servis hiç denenmez
+ConditionPathExists=/dev/sensor-uart
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sensor-oku 100
+Restart=on-failure
+RestartSec=5s
+# Ayrıcalıkları azaltma (systemd-analyze security ile değerlendirilir)
+DynamicUser=yes
+SupplementaryGroups=dialout
+CapabilityBoundingSet=
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+DevicePolicy=closed
+DeviceAllow=/dev/sensor-uart rw
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+RestrictAddressFamilies=AF_UNIX AF_INET
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

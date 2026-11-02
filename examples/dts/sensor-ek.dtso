@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: MIT
+/*
+ * sensor-ek.dtso: genişletme kartındaki ikinci sıcaklık sensörü için bindirme (overlay). Bölüm 4.
+ * Temel ağaç -@ ile (simge tablosuyla) derlenmiş olmalıdır.
+ */
+/dts-v1/;
+/plugin/;
+
+&i2c0 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	sensor@49 {
+		compatible = "ti,tmp102";
+		reg = <0x49>;
+		label = "kabin";
+		#thermal-sensor-cells = <1>;
+	};
+};

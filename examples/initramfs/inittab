@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+# /etc/inittab: BusyBox init yapılandırması. Bölüm 6.
+# Biçim: <tty>::<eylem>:<komut>
+::sysinit:/etc/init.d/rcS
+ttyAMA0::respawn:/sbin/getty -L 115200 ttyAMA0 vt100
+::ctrlaltdel:/sbin/reboot
+::shutdown:/bin/umount -a -r
